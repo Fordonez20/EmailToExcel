@@ -1,6 +1,8 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
+import re
+import json
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -55,7 +57,6 @@ def create():
 
 
 #Edit Post Function -------
-
 @application.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     post = get_post(id)
@@ -72,8 +73,14 @@ def edit(id):
                          ' WHERE id = ?',
                          (title, content, id))
             conn.commit()
+
+        #--- Code For JSON to CSV -----
+            print("Changed again!")
+            print(title)
+            
             conn.close()
             return redirect(url_for('index'))
+
 
     return render_template('edit.html', post=post)
 
@@ -91,3 +98,18 @@ def delete(id):
 
 if __name__ == "__main__":
     application.run()
+
+
+"""
+# Create a SQL connection to our SQLite database
+con = get_db_connection()
+
+cur = con.cursor()
+
+# The result of a "cursor.execute" can be iterated over by row
+for row in cur.execute('SELECT ;'):
+    print(row)
+
+# Be sure to close the connection
+con.close()
+"""
